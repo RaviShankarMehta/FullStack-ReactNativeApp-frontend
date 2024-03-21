@@ -13,7 +13,7 @@ import { AuthContext } from "../context/authContext";
 import axios from "axios";
 const Account = () => {
   const [state, setState] = useContext(AuthContext);
-  const { user } = state;
+  const { user, token } = state;
   const [name, setName] = useState(user?.name);
   const [password, setPassword] = useState(user?.password);
   const [email] = useState(user?.email);
