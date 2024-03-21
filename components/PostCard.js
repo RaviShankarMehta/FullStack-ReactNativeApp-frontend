@@ -4,8 +4,11 @@ import moment from "moment/moment";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import EditModal from "./EditModal";
 
 const PostCard = ({ posts, myPostScreen }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [post, setPost] = useState({});
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const handleDeletePrompt = (id) => {
@@ -32,7 +35,7 @@ const PostCard = ({ posts, myPostScreen }) => {
       const { data } = await axios.delete(`/post/deletePost/${id}`);
       setLoading(false);
       alert(data?.message);
-      navigation.navigate("Home");
+      navigation.push("MyPosts");
     } catch (error) {
       console.log(error);
       alert(error);
@@ -41,11 +44,28 @@ const PostCard = ({ posts, myPostScreen }) => {
   return (
     <View>
       <Text style={styles.heading}>Total posts {posts?.length}</Text>
+      {myPostScreen && (
+        <EditModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          post={post}
+        />
+      )}
       {posts?.map((post, index) => (
         <View key={index} style={styles.card}>
           {myPostScreen && (
-            <View>
-              <Text style={{ textAlign: "right" }}>
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              <Text style={{ marginHorizontal: 20 }}>
+                <FontAwesome5
+                  name="pen"
+                  size={16}
+                  color={"darkblue"}
+                  onPress={() => {
+                    setPost(post), setModalVisible(true);
+                  }}
+                />{" "}
+              </Text>
+              <Text>
                 <FontAwesome5
                   name="trash"
                   size={16}
